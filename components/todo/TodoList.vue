@@ -1,5 +1,5 @@
 <template>
-<div class="">
+<div class="" >
   <List :tasks="todoList"></List>
 </div>
 </template>

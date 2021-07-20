@@ -1,7 +1,7 @@
 <template >
   <li class="list-group"
-      :id="'task' + task.id"
-      style="margin-bottom: 4px"
+      :class="task.status ? 'completed' : ''"
+      :id="task.id"
       draggable="true"
       @dragenter="$emit('dragenter')"
       @dragleave="$emit('dragleave')"
@@ -13,8 +13,7 @@
     >
 <!--      <i class="fas fa-arrows-alt"></i>-->
     </span>
-    <div :class="this.task.status ? 'completed' : ''"
-         class="list-item"
+    <div class="list-item"
          @click.self="$emit('complete')"
     > {{ task.title }}
     </div>

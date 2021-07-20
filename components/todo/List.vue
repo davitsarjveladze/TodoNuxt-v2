@@ -1,5 +1,5 @@
 <template>
-    <section class="tasks">
+    <section class="tasks" >
       <div class="list-header" >
         <h1>
           Todo List
@@ -22,7 +22,7 @@
       </div>
 
 
-      <div class="form-group" style="margin-bottom: 30px">
+      <div ref="task.id" class="form-group" style="margin-bottom: 30px">
         <input class="form-field" @keyup.enter="addTask" v-model="newTask"  placeholder="New item">
         <span @click="addTask"><i class="fa fa-plus"></i><b>NEW</b></span>
       </div>
@@ -32,7 +32,7 @@
       <transition-group name="fade" tag="ul" style="padding: 0">
         <template v-for="(task, index) in tasks">
           <ListItem
-            @dragenter="dragEnter(index)"
+            @dragenter="dragEnter(index,task.id)"
             @dragend="dragEnd(index)"
             @remove="removeTask(index)"
             @complete="completeTask(task,index)"
@@ -58,8 +58,10 @@ export default {
   data() {
     return {
       newTask: '',
+      canAdd : true,
       draggableList : '',
       lastDragEnterIndex : 0,
+      lastDragEnterId : 0,
     }
   },
   computed: {
@@ -75,7 +77,8 @@ export default {
     // add new task to list
     addTask() {
       // check if have item
-      if (this.newTask) {
+      if (this.newTask && this.canAdd) {
+        this.canAdd = false
         // define order number to new item
         let order = this.tasks.length ? Math.ceil(this.tasks[this.tasks.length - 1]['order']) + 1 : 1
         // send request to insert
@@ -95,8 +98,8 @@ export default {
             })
             this.newTask = '';
           }
+          setTimeout(() => { this.canAdd = true },10)
         })
-
       }
     },
     // changing task status
@@ -174,8 +177,17 @@ export default {
       }
     },
     // define index of last contacted item when dragging
-    dragEnter(index) {
+    dragEnter(index,id) {
+      console.log(this.lastDragEnterId,id)
+      if (this.lastDragEnterId !== id) {
+        let element = document.getElementById(id)
+        element.classList.add("drop-place");
+        let elementPast = document.getElementById(this.lastDragEnterId)
+        elementPast?.classList.remove("drop-place");
+        this.lastDragEnterId = id
+      }
       this.lastDragEnterIndex = index
+
     },
 
     dragEnd(index) {
@@ -217,7 +229,11 @@ export default {
           if (data.data.status) {
             // updating local data
             this.$store.commit('todos/updateOrder', {index : index ,currentOrder : currentOrder})
+            let elementPast = document.getElementById(this.lastDragEnterId)
+            elementPast?.classList.remove("drop-place");
             this.lastDragEnterIndex = null
+            this.lastDragEnterId = null
+
           }
         })
       }
