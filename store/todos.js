@@ -4,13 +4,12 @@ export const state = () => ({
 
 export const actions = {
   // get full list from server
-  async getList({commit}) {
-    let list = []
-    this.$axios.$get('/todos/getall').then((result) => {
-      if (result.status === 1) {
-        commit('setList',result.data)
-      }
-    })
+  async getList({commit,state},force = false) {
+    if(state.list.length === 0 || force) {
+      this.$axios.$get('/todos/getall').then((result) => {
+        commit('setList', result)
+      })
+    }
   }
 }
 

@@ -36,17 +36,48 @@ export default {
   components: false,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-  ],
+  buildModules: [],
+
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     // 'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/vuetify',
   ],
+
   axios: {
+    credentials: true,
     baseURL: 'http://localhost:8000/api/v1/',
+
+  },
+
+
+  // auth: {
+  //   strategies: {
+  //     laravelSanctum: {
+  //       provider: 'laravel/sanctum',
+  //       url: 'http://127.0.0.1:8000',
+  //       endpoints: {
+  //         login: {
+  //           url: '/api/login'
+  //         },
+  //         logout: {
+  //           url: '/api/logout'
+  //         },
+  //         user: {
+  //           url: '/api/user'
+  //         },
+  //       },
+  //       redirect : {
+  //         login: '/',
+  //       }
+  //     },
+  //   },
+  // },
+  router: {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
